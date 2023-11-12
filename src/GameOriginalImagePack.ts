@@ -54,7 +54,7 @@ export class GameOriginalImagePack {
 
     init() {
         if (window.modImgLoaderHooker) {
-            window.modImgLoaderHooker.addHook(this.imgLoaderHooker.bind(this));
+            window.modImgLoaderHooker.addSideHooker(this.imgLoaderHooker.bind(this));
         } else {
             console.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
             this.logger.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
