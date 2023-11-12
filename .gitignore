@@ -20,3 +20,5 @@ dist*
 
 i18n.json
 *.zip
+
+boot.json
