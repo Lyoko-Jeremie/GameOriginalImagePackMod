@@ -1,0 +1,13 @@
+!.gitignore
+!.gitkeep
+**/*.png
+**/*.jpg
+**/*.gif
+**/*.svg
+**/*.js
+**/*.css
+**/*.bat
+**/*.pdn
+**/*.kra
+
+
