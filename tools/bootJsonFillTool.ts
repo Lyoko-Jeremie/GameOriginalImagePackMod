@@ -4,6 +4,7 @@ import process from 'process';
 import {promisify} from 'util';
 import JSON5 from 'json5';
 import console from "console";
+import {join} from "lodash";
 
 async function listFilesDFS(dir: string, relativeTo: string) {
     let stack = [dir];
@@ -81,16 +82,24 @@ async function traverseFolderWithStack(folderPath: string) {
     const bootJsonF = await promisify(readFile)(bootJsonFilePath, {encoding: 'utf-8'});
 
     const bootJson = JSON5.parse(bootJsonF);
-    bootJson.dependenceInfo.find((T: any) => T.modName === 'GameOriginalImagePack')!.version = `=${gameVersionString}`;
+    bootJson.dependenceInfo.find((T: any) => T.modName === 'GameVersion')!.version = `=${gameVersionString}`;
 
     let imgFileList = await listFilesDFS(imgDirPath, imgDirPath);
     console.log('imgFileList', imgFileList);
-    imgFileList = imgFileList.map(T => `img/${T}`);
+    imgFileList = imgFileList.map(T => T.replaceAll('\\', '/')).map(T => `img/${T}`);
+    console.log('imgFileList', imgFileList);
+    imgFileList = imgFileList.filter(T =>
+        T.endsWith('.png')
+        || T.endsWith('.jpg')
+        || T.endsWith('.jpeg')
+        || T.endsWith('.svg')
+        || T.endsWith('.icon')
+    );
     console.log('imgFileList', imgFileList);
 
     bootJson.imgFileList = imgFileList;
 
-    await promisify(writeFile)(bootJsonFilePath, JSON.stringify(bootJson, undefined, 2), {encoding: 'utf-8'});
+    await promisify(writeFile)(path.join(path.dirname(bootJsonFilePath), 'boot.json'), JSON.stringify(bootJson, undefined, 2), {encoding: 'utf-8'});
 
     console.log('=== Congratulation! bootJsonFillTool done! Everything is ok. ===');
 })().catch(E => {
