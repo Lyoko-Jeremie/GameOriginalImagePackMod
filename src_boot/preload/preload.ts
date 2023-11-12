@@ -1,0 +1,3 @@
+(async () => {
+    window.modGameOriginalImagePack.init();
+})();
