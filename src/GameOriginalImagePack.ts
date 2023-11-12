@@ -42,9 +42,12 @@ export class GameOriginalImagePack {
                 return true;
             } catch (e) {
                 console.error('[GameOriginalImagePack] loadImage replace error', [src, e]);
+                this.logger.error(`[GameOriginalImagePack] loadImage replace error: src[${src}] e[${e}]`);
                 return false;
             }
         } else {
+            console.warn('[GameOriginalImagePack] cannot find img. this mod is loaded as the latest ?', [src]);
+            this.logger.warn(`[GameOriginalImagePack] cannot find img. this mod is loaded as the latest ?: src[${src}]`);
             return false;
         }
     }
