@@ -58,14 +58,14 @@ async function traverseFolderWithStack(folderPath: string) {
 
     console.log('process.argv.length', process.argv.length);
     console.log('process.argv', process.argv);
-    const bootJsonFilePath = process.argv[2];
+    const bootJsonTemplateFilePath = process.argv[2];
     const imgDirPath = process.argv[3];
     const gameVersionString = process.argv[4];
-    console.log('bootJsonFilePath', bootJsonFilePath);
+    console.log('bootJsonTemplateFilePath', bootJsonTemplateFilePath);
     console.log('imgDirPath', imgDirPath);
     console.log('gameVersionString', gameVersionString);
-    if (!bootJsonFilePath) {
-        console.error('no bootJsonFilePath');
+    if (!bootJsonTemplateFilePath) {
+        console.error('no bootJsonTemplateFilePath');
         process.exit(1);
         return;
     }
@@ -79,10 +79,10 @@ async function traverseFolderWithStack(folderPath: string) {
         process.exit(1);
         return;
     }
-    const bootJsonF = await promisify(readFile)(bootJsonFilePath, {encoding: 'utf-8'});
+    const bootJsonTemplateF = await promisify(readFile)(bootJsonTemplateFilePath, {encoding: 'utf-8'});
 
-    const bootJson = JSON5.parse(bootJsonF);
-    bootJson.dependenceInfo.find((T: any) => T.modName === 'GameVersion')!.version = `=${gameVersionString}`;
+    const bootJsonTemplate = JSON5.parse(bootJsonTemplateF);
+    bootJsonTemplate.dependenceInfo.find((T: any) => T.modName === 'GameVersion')!.version = `=${gameVersionString}`;
 
     let imgFileList = await listFilesDFS(imgDirPath, imgDirPath);
     console.log('imgFileList', imgFileList);
@@ -97,9 +97,9 @@ async function traverseFolderWithStack(folderPath: string) {
     );
     console.log('imgFileList', imgFileList);
 
-    bootJson.imgFileList = imgFileList;
+    bootJsonTemplate.imgFileList = imgFileList;
 
-    await promisify(writeFile)(path.join(path.dirname(bootJsonFilePath), 'boot.json'), JSON.stringify(bootJson, undefined, 2), {encoding: 'utf-8'});
+    await promisify(writeFile)(path.join(path.dirname(bootJsonTemplateFilePath), 'boot.json'), JSON.stringify(bootJsonTemplate, undefined, 2), {encoding: 'utf-8'});
 
     console.log('=== Congratulation! bootJsonFillTool done! Everything is ok. ===');
 })().catch(E => {

@@ -15,6 +15,15 @@
   "additionFile": [
     "README.md"
   ],
+  "addonPlugin": [
+    {
+      "modName": "ModLoader DoL ImageLoaderHook",
+      "addonName": "ImageLoaderAddon",
+      "modVersion": "^2.3.3",
+      "params": [
+      ]
+    }
+  ],
   "dependenceInfo": [
     {
       "modName": "ModLoader",
