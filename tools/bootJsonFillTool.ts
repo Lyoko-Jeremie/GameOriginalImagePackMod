@@ -88,14 +88,18 @@ async function traverseFolderWithStack(folderPath: string) {
     console.log('imgFileList', imgFileList);
     imgFileList = imgFileList.map(T => T.replaceAll('\\', '/')).map(T => `img/${T}`);
     console.log('imgFileList', imgFileList);
-    imgFileList = imgFileList.filter(T =>
-        T.endsWith('.png')
-        || T.endsWith('.jpg')
-        || T.endsWith('.jpeg')
-        || T.endsWith('.svg')
-        || T.endsWith('.icon')
-    );
-    console.log('imgFileList', imgFileList);
+    // imgFileList = imgFileList.filter(T =>
+    //     T.endsWith('.png')
+    //     || T.endsWith('.jpg')
+    //     || T.endsWith('.jpeg')
+    //     || T.endsWith('.svg')
+    //     || T.endsWith('.icon')
+    //     || T.endsWith('.gif')
+    //     || T.endsWith('.apng')
+    //     || T.endsWith('.avif')
+    //     || T.endsWith('.webp')
+    // );
+    // console.log('imgFileList', imgFileList);
 
     bootJsonTemplate.imgFileList = imgFileList;
 
