@@ -1,6 +1,6 @@
 {
   "name": "GameOriginalImagePack",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "styleFileList": [],
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
@@ -19,7 +19,7 @@
   "dependenceInfo": [
     {
       "modName": "ModLoader",
-      "version": "^2.7.1"
+      "version": "^2.7.3"
     },
     {
       "modName": "ModLoader DoL ImageLoaderHook",
