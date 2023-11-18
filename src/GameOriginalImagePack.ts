@@ -16,7 +16,7 @@ export const GameOriginalImagePackLruCache = new LRUCache<string, string>({
     updateAgeOnHas: true,
 });
 
-export class GameOriginalImagePack {
+export class GameOriginalImagePack implements LifeTimeCircleHook {
     private logger: LogWrapper;
 
     constructor(
@@ -27,6 +27,7 @@ export class GameOriginalImagePack {
         this.gSC2DataManager.getSc2EventTracer().addCallback({
             whenSC2PassageEnd: this.findAllInputImageAndReplaceSrc.bind(this),
         });
+        this.gSC2DataManager.getModLoadController().addLifeTimeCircleHook('GameOriginalImagePack', this);
     }
 
     async findAllInputImageAndReplaceSrc() {
@@ -125,18 +126,23 @@ export class GameOriginalImagePack {
         }
     }
 
-    init() {
+    async ModLoaderLoadEnd() {
         if (window.modImgLoaderHooker) {
             window.modImgLoaderHooker.addSideHooker({
                 hookName: 'GameOriginalImagePackImageSideHook',
                 imageLoader: this.imgLoaderHooker.bind(this),
                 imageGetter: this.imageGetter.bind(this),
             });
+            console.log('[GameOriginalImagePack] ImgLoaderHooker addSideHooker ok');
+            this.logger.log('[GameOriginalImagePack] ImgLoaderHooker addSideHooker ok');
         } else {
             console.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
             this.logger.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
             return;
         }
+    }
+
+    init() {
         // init self
         const mod = this.gModUtils.getMod('GameOriginalImagePack');
         if (!mod) {
