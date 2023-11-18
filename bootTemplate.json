@@ -1,13 +1,12 @@
 {
   "name": "GameOriginalImagePack",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "styleFileList": [],
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
     "dist/GameOriginalImagePack.js"
   ],
   "scriptFileList_preload": [
-    "dist/preload/preload.js"
   ],
   "scriptFileList": [],
   "tweeFileList": [],
