@@ -14,6 +14,47 @@ export class GameOriginalImagePack {
         public gModUtils: ModUtils,
     ) {
         this.logger = gModUtils.getLogger();
+        this.gSC2DataManager.getSc2EventTracer().addCallback({
+            whenSC2PassageEnd: this.findAllInputImageAndReplaceSrc.bind(this),
+        });
+    }
+
+    async findAllInputImageAndReplaceSrc() {
+        console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc');
+        const nodeList: NodeListOf<HTMLInputElement> = this.gModUtils.getThisWindow().document.querySelectorAll('input[type="image"]');
+        console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc nodeList', [nodeList]);
+
+        const nodes: HTMLInputElement[] = Array.from(nodeList).filter(T => !!T.src && !T.src.startsWith('data:'));
+        console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc nodes', [nodes]);
+
+        // redirect to ML.HtmlTagSrcHook
+        return Promise.all(nodes.map(async (T) => {
+            const src = T.src;
+            console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace', [T, src]);
+            const imgString = await this.gSC2DataManager.getHtmlTagSrcHook().requestImageBySrc(src);
+            if (imgString) {
+                T.src = imgString;
+                console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace ok', [T, src, imgString]);
+                return;
+            }
+            // ignore , leave it origin
+            return;
+
+            // const src = T.src;
+            // console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace', [T, src]);
+            // const n = this.selfImg.get(src);
+            // if (n) {
+            //     try {
+            //         // this may throw error
+            //         const imgString = await n.getter.getBase64Image();
+            //         T.src = imgString;
+            //         console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace ok', [T, src, imgString]);
+            //     } catch (e) {
+            //         console.error('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace error', [T, src, e]);
+            //         this.logger.error(`[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace error: src[${src}] e[${e}]`);
+            //     }
+            // }
+        }));
     }
 
     async imgLoaderHooker(
@@ -23,6 +64,7 @@ export class GameOriginalImagePack {
         errorCallback: (src: string, layer: any, event: any) => void,
     ) {
         const n = this.selfImg.get(src);
+        // console.log('[GameOriginalImagePack] imgLoaderHooker', [src, n]);
         if (n) {
             try {
                 // this may throw error
@@ -52,9 +94,34 @@ export class GameOriginalImagePack {
         }
     }
 
+    async imageGetter(
+        src: string,
+    ) {
+        const n = this.selfImg.get(src);
+        if (n) {
+            try {
+                // this may throw error
+                return await n.getter.getBase64Image();
+            } catch (e) {
+                console.error('[GameOriginalImagePack] imageGetter error', [src, e]);
+                this.logger.error(`[GameOriginalImagePack] imageGetter error: src[${src}] e[${e}]`);
+                return undefined;
+            }
+            return undefined;
+        } else {
+            console.warn('[GameOriginalImagePack] imageGetter cannot find img. this mod is loaded as the latest ?', [src]);
+            this.logger.warn(`[GameOriginalImagePack] imageGetter cannot find img. this mod is loaded as the latest ?: src[${src}]`);
+            return undefined;
+        }
+    }
+
     init() {
         if (window.modImgLoaderHooker) {
-            window.modImgLoaderHooker.addSideHooker(this.imgLoaderHooker.bind(this));
+            window.modImgLoaderHooker.addSideHooker({
+                hookName: 'GameOriginalImagePackImageSideHook',
+                imageLoader: this.imgLoaderHooker.bind(this),
+                imageGetter: this.imageGetter.bind(this),
+            });
         } else {
             console.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
             this.logger.error('[GameOriginalImagePack] window.modImgLoaderHooker not found');
