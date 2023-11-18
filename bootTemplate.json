@@ -12,9 +12,23 @@
   "tweeFileList": [],
   "imgFileList": [],
   "additionFile": [
-    "README.md"
+    "README.md",
+    "Roschild.ttf.base64"
   ],
   "addonPlugin": [
+    {
+      "modName": "ModuleCssReplacer",
+      "addonName": "ModuleCssReplacerAddon",
+      "modVersion": "^1.0.0",
+      "params": [
+        {
+          "cssName": "sexShopMenu",
+          "findString": "/fonts/Roschild.ttf\");",
+          "replaceFile": "Roschild.ttf.base64",
+          "debug": false
+        }
+      ]
+    }
   ],
   "dependenceInfo": [
     {
@@ -24,6 +38,10 @@
     {
       "modName": "ModLoader DoL ImageLoaderHook",
       "version": "^2.7.0"
+    },
+    {
+      "modName": "ModuleCssReplacer",
+      "version": "^1.0.0"
     },
     {
       "modName": "GameVersion",
