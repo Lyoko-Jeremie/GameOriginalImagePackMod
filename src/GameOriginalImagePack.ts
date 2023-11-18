@@ -4,7 +4,17 @@ import type {SC2DataManager} from "../../../dist-BeforeSC2/SC2DataManager";
 import type {ModUtils} from "../../../dist-BeforeSC2/Utils";
 import type {ModBootJson, ModImg, ModInfo} from "../../../dist-BeforeSC2/ModLoader";
 import {isArray, isNil, isString} from 'lodash';
+import {LRUCache} from 'lru-cache';
 
+export const GameOriginalImagePackLruCache = new LRUCache<string, string>({
+    max: 30,
+    ttl: 1000 * 60 * 30,
+    dispose: (value: string, key: string, reason: LRUCache.DisposeReason) => {
+        console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
+    },
+    updateAgeOnGet: true,
+    updateAgeOnHas: true,
+});
 
 export class GameOriginalImagePack {
     private logger: LogWrapper;
@@ -46,7 +56,7 @@ export class GameOriginalImagePack {
             // if (n) {
             //     try {
             //         // this may throw error
-            //         const imgString = await n.getter.getBase64Image();
+            //         const imgString = await n.getter.getBase64Image(GameOriginalImagePackLruCache);
             //         T.src = imgString;
             //         console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace ok', [T, src, imgString]);
             //     } catch (e) {
@@ -68,7 +78,7 @@ export class GameOriginalImagePack {
         if (n) {
             try {
                 // this may throw error
-                const imgString = await n.getter.getBase64Image();
+                const imgString = await n.getter.getBase64Image(GameOriginalImagePackLruCache);
 
                 const image = new Image();
                 image.onload = () => {
@@ -101,7 +111,7 @@ export class GameOriginalImagePack {
         if (n) {
             try {
                 // this may throw error
-                return await n.getter.getBase64Image();
+                return await n.getter.getBase64Image(GameOriginalImagePackLruCache);
             } catch (e) {
                 console.error('[GameOriginalImagePack] imageGetter error', [src, e]);
                 this.logger.error(`[GameOriginalImagePack] imageGetter error: src[${src}] e[${e}]`);
