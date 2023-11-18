@@ -92,9 +92,9 @@ export class GameOriginalImagePack {
                 image.src = imgString;
                 // console.log('[GameOriginalImagePack] loadImage replace', [n.modName, src, image, n.imgData]);
                 return true;
-            } catch (e) {
+            } catch (e: Error | any) {
                 console.error('[GameOriginalImagePack] loadImage replace error', [src, e]);
-                this.logger.error(`[GameOriginalImagePack] loadImage replace error: src[${src}] e[${e}]`);
+                this.logger.error(`[GameOriginalImagePack] loadImage replace error: src[${src}] e[${e?.message ? e.message : e}]`);
                 return false;
             }
         } else {
@@ -112,9 +112,9 @@ export class GameOriginalImagePack {
             try {
                 // this may throw error
                 return await n.getter.getBase64Image(GameOriginalImagePackLruCache);
-            } catch (e) {
+            } catch (e: Error | any) {
                 console.error('[GameOriginalImagePack] imageGetter error', [src, e]);
-                this.logger.error(`[GameOriginalImagePack] imageGetter error: src[${src}] e[${e}]`);
+                this.logger.error(`[GameOriginalImagePack] imageGetter error: src[${src}] e[${e?.message ? e.message : e}]`);
                 return undefined;
             }
             return undefined;
