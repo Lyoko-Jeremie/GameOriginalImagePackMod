@@ -7,7 +7,7 @@ import {isArray, isNil, isString} from 'lodash';
 import {LRUCache} from 'lru-cache';
 
 export const GameOriginalImagePackLruCache = new LRUCache<string, string>({
-    max: 30,
+    max: 50,
     ttl: 1000 * 60 * 30,
     dispose: (value: string, key: string, reason: LRUCache.DisposeReason) => {
         console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
