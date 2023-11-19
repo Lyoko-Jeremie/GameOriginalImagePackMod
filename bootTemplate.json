@@ -1,7 +1,6 @@
 {
   "name": "GameOriginalImagePack",
   "version": "1.3.0",
-  "styleFileList": [],
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
     "dist/GameOriginalImagePack.js"
@@ -10,6 +9,9 @@
     "dist/preload/preload.js"
   ],
   "scriptFileList": [],
+  "styleFileList": [
+    "Roschild.ttf.css"
+  ],
   "tweeFileList": [],
   "imgFileList": [],
   "additionFile": [
@@ -17,19 +19,20 @@
     "Roschild.ttf.base64"
   ],
   "addonPlugin": [
-    {
-      "modName": "ModuleCssReplacer",
-      "addonName": "ModuleCssReplacerAddon",
-      "modVersion": "^1.0.0",
-      "params": [
-        {
-          "cssName": "sexShopMenu",
-          "findString": "/fonts/Roschild.ttf\");",
-          "replaceFile": "Roschild.ttf.base64",
-          "debug": false
-        }
-      ]
-    }
+//    {
+//      "modName": "ModuleCssReplacer",
+//      "addonName": "ModuleCssReplacerAddon",
+//      "modVersion": "^1.0.0",
+//      "params": [
+//        {
+//          "cssName": "sexShopMenu",
+//          "findString": "/fonts/Roschild.ttf\");",
+//          "replaceFile": "Roschild.ttf.base64",
+//          "replace": "",
+//          "debug": false
+//        }
+//      ]
+//    }
   ],
   "dependenceInfo": [
     {
