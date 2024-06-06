@@ -10,7 +10,7 @@ export const GameOriginalImagePackLruCache = new LRUCache<string, string>({
     max: 50,
     ttl: 1000 * 60 * 30,
     dispose: (value: string, key: string, reason: LRUCache.DisposeReason) => {
-        console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
+        // console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
     },
     updateAgeOnGet: true,
     updateAgeOnHas: true,
@@ -120,6 +120,10 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
             }
             return undefined;
         } else {
+            if (src.startsWith('data:')) {
+                // it was replaced, ignore it
+                return undefined;
+            }
             console.warn('[GameOriginalImagePack] imageGetter cannot find img. this mod is loaded as the latest ?', [src]);
             this.logger.warn(`[GameOriginalImagePack] imageGetter cannot find img. this mod is loaded as the latest ?: src[${src}]`);
             return undefined;
