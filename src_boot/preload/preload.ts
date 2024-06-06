@@ -21,6 +21,11 @@
             // 重写 img 的 src 属性
             Object.defineProperty(img, 'src', {
                 set: function (src: string) {
+                    if (src.startsWith('data:')) {
+                        // skip replace
+                        img.setAttribute('src', src);
+                        return;
+                    }
                     window.modUtils.pSC2DataManager.getHtmlTagSrcHook().requestImageBySrc(src).then(imgString => {
                         if (imgString) {
                             // 创建一个新的 Image 对象来处理缓存中的 Base64 数据
