@@ -15,5 +15,5 @@ node "<To bootJsonFillTool.js>" "<To bootTemplate.json>" "<To img dir>" "<Game V
 example :
 
 ```shell
-node ".\dist-tools\bootJsonFillTool.js" "bootTemplate.json" "img" "0.4.0.1"
+node ".\dist-tools\bootJsonFillTool.js" "bootTemplate.json" "img" "0.5.0.3"
 ```
