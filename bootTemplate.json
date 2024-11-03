@@ -1,6 +1,6 @@
 {
   "name": "GameOriginalImagePack",
-  "version": "1.3.8",
+  "version": "1.6.0",
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
     "dist/GameOriginalImagePack.js"
@@ -19,31 +19,15 @@
     "Roschild.ttf.base64"
   ],
   "addonPlugin": [
-//    {
-//      "modName": "ReplacePatcher",
-//      "addonName": "ReplacePatcherAddon",
-//      "modVersion": "1.0.0",
-//      "params": {
-//        "js": [
-//          {
-//            "from": "\t\t\t\t\timg.src = this.imagePaths[name];",
-//            "to": "\t\t\t\t\tPromise.resolve().then(()=>{return window.modUtils.pSC2DataManager.getHtmlTagSrcHook().requestImageBySrc(this.imagePaths[name]);}).then(imgString=>{img.src = imgString || this.imagePaths[name];}).catch(reject);",
-//            "fileName": "weather-Effect.js"
-//          }
-//        ],
-//        "css": [],
-//        "twee": []
-//      }
-//    }
   ],
   "dependenceInfo": [
     {
       "modName": "ModLoader",
-      "version": "^2.17.3"
+      "version": "^2.22.0"
     },
     {
       "modName": "ModLoader DoL ImageLoaderHook",
-      "version": "^2.10.8"
+      "version": "^2.16.0"
     },
     {
       "modName": "ModuleCssReplacer",
