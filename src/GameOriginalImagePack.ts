@@ -2,19 +2,19 @@ import JSZip from "jszip";
 import type {LifeTimeCircleHook, LogWrapper} from "../../../dist-BeforeSC2/ModLoadController";
 import type {SC2DataManager} from "../../../dist-BeforeSC2/SC2DataManager";
 import type {ModUtils} from "../../../dist-BeforeSC2/Utils";
-import type {ModBootJson, ModImg, ModInfo} from "../../../dist-BeforeSC2/ModLoader";
+import type {ImgLruCacheItemType, ModBootJson, ModImg, ModInfo} from "../../../dist-BeforeSC2/ModLoader";
 import {isArray, isNil, isString} from 'lodash';
 import {LRUCache} from 'lru-cache';
 
-export const GameOriginalImagePackLruCache = new LRUCache<string, string>({
-    max: 50,
-    ttl: 1000 * 60 * 30,
-    dispose: (value: string, key: string, reason: LRUCache.DisposeReason) => {
-        // console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
-    },
-    updateAgeOnGet: true,
-    updateAgeOnHas: true,
-});
+// export const GameOriginalImagePackLruCache = new LRUCache<string, ImgLruCacheItemType>({
+//     max: 50,
+//     ttl: 1000 * 60 * 30,
+//     dispose: (value: ImgLruCacheItemType, key: string, reason: LRUCache.DisposeReason) => {
+//         // console.log('GameOriginalImagePackLruCache dispose', [value], [reason]);
+//     },
+//     updateAgeOnGet: true,
+//     updateAgeOnHas: true,
+// });
 
 export class GameOriginalImagePack implements LifeTimeCircleHook {
     private logger: LogWrapper;
@@ -79,7 +79,12 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         if (n) {
             try {
                 // this may throw error
-                const imgString = await n.getter.getBase64Image(GameOriginalImagePackLruCache);
+                const imgString = await n.getter.getBase64Image();
+                if (!imgString) {
+                    console.error('[GameOriginalImagePack] imgLoaderHooker getBase64Image() invalid', [src]);
+                    this.logger.error(`[GameOriginalImagePack] imgLoaderHooker getBase64Image() invalid: src[${src}]`);
+                    return false;
+                }
 
                 const image = new Image();
                 image.onload = () => {
@@ -91,16 +96,16 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
                     errorCallback(src, layer, event);
                 };
                 image.src = imgString;
-                // console.log('[GameOriginalImagePack] loadImage replace', [n.modName, src, image, n.imgData]);
+                // console.log('[GameOriginalImagePack] imgLoaderHooker replace', [n.modName, src, image, n.imgData]);
                 return true;
             } catch (e: Error | any) {
-                console.error('[GameOriginalImagePack] loadImage replace error', [src, e]);
-                this.logger.error(`[GameOriginalImagePack] loadImage replace error: src[${src}] e[${e?.message ? e.message : e}]`);
+                console.error('[GameOriginalImagePack] imgLoaderHooker replace error', [src, e]);
+                this.logger.error(`[GameOriginalImagePack] imgLoaderHooker replace error: src[${src}] e[${e?.message ? e.message : e}]`);
                 return false;
             }
         } else {
-            console.warn('[GameOriginalImagePack] cannot find img. this mod is loaded as the latest ?', [src]);
-            this.logger.warn(`[GameOriginalImagePack] cannot find img. this mod is loaded as the latest ?: src[${src}]`);
+            console.warn('[GameOriginalImagePack] imgLoaderHooker cannot find img. this mod is loaded as the latest ?', [src]);
+            this.logger.warn(`[GameOriginalImagePack] imgLoaderHooker cannot find img. this mod is loaded as the latest ?: src[${src}]`);
             return false;
         }
     }
@@ -112,7 +117,12 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         if (n) {
             try {
                 // this may throw error
-                return await n.getter.getBase64Image(GameOriginalImagePackLruCache);
+                const r = await n.getter.getBase64Image();
+                if (!r) {
+                    console.error('[GameOriginalImagePack] imageGetter error. invalid image', [src]);
+                    return undefined;
+                }
+                return r;
             } catch (e: Error | any) {
                 console.error('[GameOriginalImagePack] imageGetter error', [src, e]);
                 this.logger.error(`[GameOriginalImagePack] imageGetter error: src[${src}] e[${e?.message ? e.message : e}]`);
