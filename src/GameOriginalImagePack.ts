@@ -1,10 +1,8 @@
-import JSZip from "jszip";
 import type {LifeTimeCircleHook, LogWrapper} from "../../../dist-BeforeSC2/ModLoadController";
 import type {SC2DataManager} from "../../../dist-BeforeSC2/SC2DataManager";
 import type {ModUtils} from "../../../dist-BeforeSC2/Utils";
-import type {ImgLruCacheItemType, ModBootJson, ModImg, ModInfo} from "../../../dist-BeforeSC2/ModLoader";
-import {isArray, isNil, isString} from 'lodash';
-import {LRUCache} from 'lru-cache';
+import type {ModImg} from "../../../dist-BeforeSC2/ModLoader";
+import {every, get, isArray, isString} from 'lodash';
 
 // export const GameOriginalImagePackLruCache = new LRUCache<string, ImgLruCacheItemType>({
 //     max: 50,
@@ -74,6 +72,10 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         successCallback: (src: string, layer: any, img: HTMLImageElement) => void,
         errorCallback: (src: string, layer: any, event: any) => void,
     ) {
+        if (this.selfIgnoreImagePath.has(src)) {
+            // skip it.
+            return false;
+        }
         const n = this.selfImg.get(src);
         // console.log('[GameOriginalImagePack] imgLoaderHooker', [src, n]);
         if (n) {
@@ -113,6 +115,10 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
     async imageGetter(
         src: string,
     ) {
+        if (this.selfIgnoreImagePath.has(src)) {
+            // skip it.
+            return undefined;
+        }
         const n = this.selfImg.get(src);
         if (n) {
             try {
@@ -158,7 +164,16 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
 
     init() {
         // init self
-        const mod = this.gModUtils.getMod('GameOriginalImagePack');
+        const nowMod = this.gModUtils.getNowRunningModName();
+        if (!nowMod) {
+            // never go there
+            console.error('[GameOriginalImagePack] nowMod invalid');
+            this.logger.error('[GameOriginalImagePack] nowMod invalid');
+            throw new Error('[GameOriginalImagePack] nowMod invalid');
+            return;
+        }
+        // 'GameOriginalImagePack'
+        const mod = this.gModUtils.getMod(nowMod);
         if (!mod) {
             console.error('[GameOriginalImagePack] self mod not found');
             this.logger.error('[GameOriginalImagePack] self mod not found');
@@ -172,7 +187,13 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         for (const img of mod.imgs) {
             this.selfImg.set(img.path, img);
         }
+        if (isArray(get(mod.bootJson, 'ignoreImagePath')) && every(get(mod.bootJson, 'ignoreImagePath'), isString)) {
+            this.selfIgnoreImagePath = new Set<string>(get(mod.bootJson, 'ignoreImagePath')! as string[]);
+        }
     }
 
     selfImg: Map<string, ModImg> = new Map<string, ModImg>();
+
+    selfIgnoreImagePath: Set<string> = new Set<string>();
+
 }
