@@ -1,6 +1,6 @@
 {
   "name": "GameOriginalImagePack",
-  "version": "1.6.0",
+  "version": "1.8.0",
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
     "dist/GameOriginalImagePack.js"
@@ -23,10 +23,10 @@
   "dependenceInfo": [
     {
       "modName": "ModLoader",
-      "version": "^2.22.0"
+      "version": "^2.26.2"
     },
     {
-      "modName": "ModLoader DoL ImageLoaderHook",
+      "modName": "ImageLoaderHook",
       "version": "^2.16.0"
     },
     {
@@ -41,5 +41,8 @@
       "modName": "ReplacePatcher",
       "version": "^1.2.1"
     }
+  ],
+  "ignoreImagePath": [
+    "img/misc/banner.png"
   ]
 }
