@@ -146,12 +146,40 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         }
     }
 
+    checkImageExist(src: string) {
+        if (this.selfIgnoreImagePath.has(src)) {
+            // skip it.
+            return undefined;
+        }
+        const n = this.selfImg.get(src);
+        if (n) {
+            try {
+                // this may throw error
+                const r = n.getter.invalid;
+                if (!r) {
+                    return true;
+                }
+                return false;
+            } catch (e: Error | any) {
+                console.error('[GameOriginalImagePack] checkImageExist error', [src, e]);
+                this.logger.error(`[GameOriginalImagePack] checkImageExist error: src[${src}] e[${e?.message ? e.message : e}]`);
+                return undefined;
+            }
+            return false;
+        } else {
+            console.warn('[GameOriginalImagePack] checkImageExist cannot find img. this mod is loaded as the latest ?', [src]);
+            this.logger.warn(`[GameOriginalImagePack] checkImageExist cannot find img. this mod is loaded as the latest ?: src[${src}]`);
+            return false;
+        }
+    }
+
     async ModLoaderLoadEnd() {
         if (window.modImgLoaderHooker) {
             window.modImgLoaderHooker.addSideHooker({
                 hookName: 'GameOriginalImagePackImageSideHook',
                 imageLoader: this.imgLoaderHooker.bind(this),
                 imageGetter: this.imageGetter.bind(this),
+                checkImageExist: this.checkImageExist.bind(this),
             });
             console.log('[GameOriginalImagePack] ImgLoaderHooker addSideHooker ok');
             this.logger.log('[GameOriginalImagePack] ImgLoaderHooker addSideHooker ok');
