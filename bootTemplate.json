@@ -19,6 +19,22 @@
     "Roschild.ttf.base64"
   ],
   "addonPlugin": [
+    {
+      "modName": "ReplacePatcher",
+      "addonName": "ReplacePatcherAddon",
+      "modVersion": "^1.2.1",
+      "params": {
+          "js": [{
+              "from": "const icon = document.createElement(\"img\");",
+              "to": "const icon = new Image();",
+              "fileName": "30-canvasmodel-editor.js"
+          },{
+            "from": "button.append(icon);",
+              "to": "icon.style.width = 'auto';button.append(icon);",
+              "fileName": "30-canvasmodel-editor.js"
+          }]
+      }
+  }
   ],
   "dependenceInfo": [
     {
