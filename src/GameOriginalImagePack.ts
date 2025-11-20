@@ -33,11 +33,11 @@ export class GameOriginalImagePack implements LifeTimeCircleHook {
         const nodeList: NodeListOf<HTMLInputElement> = this.gModUtils.getThisWindow().document.querySelectorAll('input[type="image"]');
         console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc nodeList', [nodeList]);
 
-        const nodes: HTMLInputElement[] = Array.from(nodeList).filter(T => !!T.src && !T.src.startsWith('data:'));
+        const nodes: HTMLInputElement[] = Array.from(nodeList).filter(T => !!T.src && T.src !== 'null' && !T.src.startsWith('data:'));
         console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc nodes', [nodes]);
 
         // redirect to ML.HtmlTagSrcHook
-        return Promise.all(nodes.map(async (T) => {
+        return Promise.allSettled(nodes.map(async (T) => {
             const src = T.src;
             console.log('[GameOriginalImagePack] findAllInputImageAndReplaceSrc replace', [T, src]);
             const imgString = await this.gSC2DataManager.getHtmlTagSrcHook().requestImageBySrc(src);

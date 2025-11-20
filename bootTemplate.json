@@ -1,6 +1,6 @@
 {
   "name": "GameOriginalImagePack",
-  "version": "1.9.0",
+  "version": "1.100.0",
   "scriptFileList_earlyload": [],
   "scriptFileList_inject_early": [
     "dist/GameOriginalImagePack.js"
@@ -25,10 +25,6 @@
       "modVersion": "^1.2.1",
       "params": {
           "js": [{
-              "from": "const icon = document.createElement(\"img\");",
-              "to": "const icon = new Image();",
-              "fileName": "30-canvasmodel-editor.js"
-          },{
             "from": "button.append(icon);",
               "to": "icon.style.width = 'auto';button.append(icon);",
               "fileName": "30-canvasmodel-editor.js"
@@ -39,11 +35,11 @@
   "dependenceInfo": [
     {
       "modName": "ModLoader",
-      "version": "^2.33.0"
+      "version": "^2.100.0"
     },
     {
       "modName": "ImageLoaderHook",
-      "version": "^2.22.0"
+      "version": "^2.100.0"
     },
     {
       "modName": "GameVersion",
