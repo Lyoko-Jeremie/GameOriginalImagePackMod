@@ -46,10 +46,6 @@
       "version": "^2.22.0"
     },
     {
-      "modName": "ModuleCssReplacer",
-      "version": "^1.0.0"
-    },
-    {
       "modName": "GameVersion",
       "version": "=0.0.0.0"
     },
