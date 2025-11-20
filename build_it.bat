@@ -1,6 +1,6 @@
 
-node ".\dist-tools\bootJsonFillTool.js" "bootTemplate.json" "img" "0.5.4.9"
+node "./dist-tools/bootJsonFillTool.js" "bootTemplate.json" "img" "0.5.6.8"
 
-node "H:\Code\DoL\ModLoader\dist-insertTools\packModZip.js" "boot.json"
+node "../../dist-insertTools/packModZip.js" "boot.json"
 
 pause
